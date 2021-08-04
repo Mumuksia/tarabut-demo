@@ -1,0 +1,2 @@
+y12:16:29.739 [Test worker] ERROR com.tarabut.retriever.services.PersistencePreferenceRetriever - User identifier is null
+)java.lang.IllegalArgumentException: null

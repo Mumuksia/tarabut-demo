@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.tarabut.retriever.services.PersistencePreferenceRetrieverTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2021-08-04T08:16:29" hostname="Yuriys-MacBook-Pro.local" time="0.119">
+  <properties/>
+  <testcase name="shouldRetrieveEmptyWhenNotPresent()" classname="com.tarabut.retriever.services.PersistencePreferenceRetrieverTest" time="0.111"/>
+  <testcase name="shouldRetrieveEmptyWhenUserNull()" classname="com.tarabut.retriever.services.PersistencePreferenceRetrieverTest" time="0.005"/>
+  <testcase name="shouldRetrieveUserWhenPresent()" classname="com.tarabut.retriever.services.PersistencePreferenceRetrieverTest" time="0.002"/>
+  <system-out><![CDATA[12:16:29.739 [Test worker] ERROR com.tarabut.retriever.services.PersistencePreferenceRetriever - User identifier is null
+java.lang.IllegalArgumentException: null
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
