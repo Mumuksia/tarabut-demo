@@ -26,17 +26,18 @@ The endpoint is secured with default credentials admin/admin and self signed cer
 From te root folder build updater and retriver project. 
 
 ./updater/gradlew build
+
 ./retriever/gradlew build
 
-	`docker-compose build`
+	docker-compose build
 
-	`docker-compose up`
+	docker-compose up
 
 To run initial sql script:
 
-	`docker exec -it mysql_container_name bash`
+	docker exec -it mysql_container_name bash
   
-	`mysql -uroot -p < init.sql.  #with "password"`
+	mysql -uroot -p < init.sql.  #with "password"
 
 ## accessing endpoints
 The services are mapped to 443 (retriever) and 8443 (updater) ports.
