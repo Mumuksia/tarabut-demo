@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: updater-deployment
+  labels:
+    app: updater
+    type: api
+spec:
+  replicas: 2
+  serviceName: "updater"
+  selector:
+    matchLabels:
+      app: updater
+  template:
+    metadata:
+      labels:
+        app: updater
+        type: api
+    spec:
+      containers:
+      - image: registry-url/updater:latest
+        imagePullPolicy: IfNotPresent
+        name: updater
+        resources:
+          requests:
+            cpu: "0.2"
+            memory: 256Mi
+          limits:
+            memory: 1024Mi
+        env:
+        - name: spring.datasource.url
+          value: "somedatabase.clustername.etc"
+        - name: LOG_LEVEL
+          value: "warn"
+        - name: spring.datasource.password
+          valueFrom:
+            secretKeyRef:
+              name: mysqldb
+              key: mysql-root-password
+        ports:
+        - name: https
+          containerPort: 8443
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 50
+          timeoutSeconds: 15
+          periodSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 50
+          periodSeconds: 10
+          timeoutSeconds: 15
+      restartPolicy: Always
+      
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: updater
+  labels:
+    app: updater
+spec:
+  selector:
+    app: updater
+  clusterIP: None
+  ports:
+  - name: updater
+    port: 8443
+    targetPort: 8443
+---
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: updater
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: updater
+      type: api

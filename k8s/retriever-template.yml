@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: retriever-deployment
+  labels:
+    app: retriever
+    type: api
+spec:
+  replicas: 2
+  serviceName: "retriever"
+  selector:
+    matchLabels:
+      app: retriever
+  template:
+    metadata:
+      labels:
+        app: retriever
+        type: api
+    spec:
+      containers:
+      - image: registry-url/retriever:latest
+        imagePullPolicy: IfNotPresent
+        name: retriever
+        resources:
+          requests:
+            cpu: "0.2"
+            memory: 256Mi
+          limits:
+            memory: 1024Mi
+        env:
+        - name: spring.datasource.url
+          value: "somedatabase.clustername.etc"
+        - name: LOG_LEVEL
+          value: "warn"
+        - name: spring.datasource.password
+          valueFrom:
+            secretKeyRef:
+              name: mysqldb
+              key: mysql-root-password
+        ports:
+        - name: https
+          containerPort: 443
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 50
+          timeoutSeconds: 15
+          periodSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 50
+          periodSeconds: 10
+          timeoutSeconds: 15
+      restartPolicy: Always
+      
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: retriever
+  labels:
+    app: retriever
+spec:
+  selector:
+    app: retriever
+  clusterIP: None
+  ports:
+  - name: retriever
+    port: 443
+    targetPort: 443
+---
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: retriever
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: retriever
+      type: api
