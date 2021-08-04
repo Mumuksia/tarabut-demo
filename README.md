@@ -49,3 +49,9 @@ https://localhost/retrieve/preference/by/?user=12345
 https://localhost:8443/update/preference/?user=12345&sms=True&post=true&email=true
 
 default credentials admin/admin will be required upon calling the endpoints. 
+
+To call https endpoints from localhost sometimes changing in chrome browser are required like:
+
+chrome://flags/#allow-insecure-localhost
+
+Also sometimes it's required to accept self signed certificate
