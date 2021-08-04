@@ -1,11 +1,12 @@
 package com.tarabut.updater.services;
 
-import com.tarabut.updater.dto.Preferences;
 import com.tarabut.updater.dto.repository.PreferencesRepository;
+import com.tarabut.updater.mappers.MapperService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import static com.tarabut.updater.util.PreferencesBuilder.createFalsePreference;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -18,13 +19,18 @@ class PersistencePreferenceUpdaterTest {
     @BeforeAll
     static void init(){
         PreferencesRepository preferencesRepository = mock(PreferencesRepository.class);
-        when(preferencesRepository.save(createPreference(NO_PREFERENCES_USER)))
-                .thenReturn(createPreference(NO_PREFERENCES_USER));
+        when(preferencesRepository.save(createFalsePreference(NO_PREFERENCES_USER)))
+                .thenReturn(createFalsePreference(NO_PREFERENCES_USER));
 
-        when(preferencesRepository.save(createPreference(null)))
+        when(preferencesRepository.save(createFalsePreference(null)))
                 .thenThrow(IllegalArgumentException.class);
 
+        MapperService mapperService = mock(MapperService.class);
+        when(mapperService.mapToString(createFalsePreference(NO_PREFERENCES_USER)))
+                .thenReturn("{\"userIdentifier\":\"123\",\"sms\":false,\"post\":false,\"email\":false}");
+
         persistencePreferenceUpdater.setPreferencesRepository(preferencesRepository);
+        persistencePreferenceUpdater.setMapperService(mapperService);
     }
 
     @Test
@@ -39,7 +45,5 @@ class PersistencePreferenceUpdaterTest {
         Assertions.assertEquals("{}", testee);
     }
 
-    private static Preferences createPreference(String userId){
-        return new Preferences(userId, false, false, false);
-    }
+
 }

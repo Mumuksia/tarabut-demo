@@ -25,15 +25,21 @@ The endpoint is secured with default credentials admin/admin and self signed cer
 
 From te root folder build updater and retriver project. 
 
-./updater/gradlew build
+cd updater 
 
-./retriever/gradlew build
+./gradlew build
+
+cd retriever 
+
+./gradlew build
+
+From the root directory:
 
 	docker-compose build
 
 	docker-compose up
 
-To run initial sql script:
+Initial script should be picked up automatically in case it's not the changes can be done via
 
 	docker exec -it mysql_container_name bash
   
@@ -49,3 +55,11 @@ https://localhost/retrieve/preference/by/?user=12345
 https://localhost:8443/update/preference/?user=12345&sms=True&post=true&email=true
 
 default credentials admin/admin will be required upon calling the endpoints. 
+
+### Swagger
+
+Swagger is accessible via
+
+https://localhost/swagger-ui/index.html
+
+https://localhost:8443/swagger-ui/index.html

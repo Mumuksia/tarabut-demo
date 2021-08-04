@@ -1,9 +1,8 @@
 package com.tarabut.updater.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tarabut.updater.dto.Preferences;
 import com.tarabut.updater.dto.repository.PreferencesRepository;
+import com.tarabut.updater.mappers.MapperService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,26 +16,27 @@ public class PersistencePreferenceUpdater implements PreferenceUpdaterService {
 
     @Autowired
     PreferencesRepository preferencesRepository;
+    @Autowired
+    MapperService mapperService;
 
     @Override
     public String updatePreferenceForUser(String userId, String sms, String post, String email) {
         try {
             Preferences preferences = preferencesRepository.save(new Preferences(userId, Boolean.valueOf(sms),
                     Boolean.valueOf(post), Boolean.valueOf(email)));
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(preferences);
+            return mapperService.mapToString(preferences);
         }
         catch (IllegalArgumentException ie){
             logger.error("User identifier is null", ie);
-            return NO_DATA;
-        }
-        catch (JsonProcessingException e) {
-            logger.error("Exception when parsing preferences output", e);
             return NO_DATA;
         }
     }
 
     public void setPreferencesRepository(PreferencesRepository preferencesRepository) {
         this.preferencesRepository = preferencesRepository;
+    }
+
+    public void setMapperService(MapperService mapperService) {
+        this.mapperService = mapperService;
     }
 }

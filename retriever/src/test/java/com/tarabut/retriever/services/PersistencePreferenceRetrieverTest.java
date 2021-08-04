@@ -2,6 +2,7 @@ package com.tarabut.retriever.services;
 
 import com.tarabut.retriever.dto.Preferences;
 import com.tarabut.retriever.dto.repository.PreferencesRepository;
+import com.tarabut.retriever.mappers.MapperService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -28,7 +29,14 @@ public class PersistencePreferenceRetrieverTest{
         when(preferencesRepository.findFirstByUserIdentifierOrderByIdDesc(null))
                 .thenThrow(IllegalArgumentException.class);
 
+        MapperService mapperService = mock(MapperService.class);
+        when(mapperService.mapToString(createPreference()))
+                .thenReturn("{\"userIdentifier\":\"123\",\"sms\":true,\"post\":false,\"email\":true}");
+        when(mapperService.mapToString(new Preferences()))
+                .thenReturn("{}");
+
         persistencePreferenceRetriever.setPreferencesRepository(preferencesRepository);
+        persistencePreferenceRetriever.setMapperService(mapperService);
     }
 
     @Test

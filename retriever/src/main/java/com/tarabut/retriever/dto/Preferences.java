@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.sql.Timestamp;
+import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Entity
@@ -61,5 +62,18 @@ public class Preferences {
 
     public void setEmail(Boolean email) {
         this.email = email;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Preferences that = (Preferences) o;
+        return Objects.equals(userIdentifier, that.userIdentifier) && Objects.equals(sms, that.sms) && Objects.equals(post, that.post) && Objects.equals(email, that.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userIdentifier, sms, post, email);
     }
 }
