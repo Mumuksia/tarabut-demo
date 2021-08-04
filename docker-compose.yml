@@ -1,0 +1,22 @@
+version: "3.9"
+services:
+  mysql-db:
+    build: ./mysql-tarabut
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./.data/sql:/var/lib/mysql
+  tarabut-retriever:
+    build: ./retriever
+    ports:
+      - "443:443"
+    environment:
+      spring.datasource.url: "jdbc:mysql://mysql-db:3306/tarabut?useTimezone=true&serverTimezone=UTC"
+      spring.datasource.password: "password"
+  tarabut-updater:
+    build: ./updater
+    ports:
+      - "8443:443"
+    environment:
+      spring.datasource.url: "jdbc:mysql://mysql-db:3306/tarabut?useTimezone=true&serverTimezone=UTC"
+      spring.datasource.password: "password"
