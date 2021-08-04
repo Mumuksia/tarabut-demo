@@ -28,18 +28,23 @@ From te root folder build updater and retriver project.
 ./updater/gradlew build
 ./retriever/gradlew build
 
-docker-compose build
+	`docker-compose build`
 
-docker-compose up
+	`docker-compose up`
 
 To run initial sql script:
-docker exec -it mysql_container_name bash
-mysql -uroot -p < init.sql.  #with "password"
+
+	`docker exec -it mysql_container_name bash`
+  
+	`mysql -uroot -p < init.sql.  #with "password"`
 
 ## accessing endpoints
 The services are mapped to 443 (retriever) and 8443 (updater) ports.
+
 Sample calls are like:
+
 https://localhost/retrieve/preference/by/?user=12345
+
 https://localhost:8443/update/preference/?user=12345&sms=True&post=true&email=true
 
 default credentials admin/admin will be required upon calling the endpoints. 
