@@ -44,6 +44,8 @@ Initial script should be picked up automatically in case it's not the changes ca
 	docker exec -it mysql_container_name bash
   
 	mysql -uroot -p < init.sql.  #with "password"
+	
+Wait for the containers to start, usually it takes a minute for mysql first time. Sequential runs will reuse the database created at first run.
 
 ## accessing endpoints
 The services are mapped to 443 (retriever) and 8443 (updater) ports.
@@ -56,6 +58,10 @@ https://localhost:8443/update/preference/?user=12345&sms=True&post=true&email=tr
 
 default credentials admin/admin will be required upon calling the endpoints. 
 
+To call https endpoints from localhost sometimes changing in chrome browser are required like:
+
+chrome://flags/#allow-insecure-localhost
+
 ### Swagger
 
 Swagger is accessible via
@@ -63,3 +69,9 @@ Swagger is accessible via
 https://localhost/swagger-ui/index.html
 
 https://localhost:8443/swagger-ui/index.html
+
+## Architectural decisions:
+
+In controllers ResponseBody is not used to have better control of what is returned.
+
+The exceptions are logged and not propagated as in high load systems this propagation is expensive (performance wise).
