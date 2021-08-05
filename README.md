@@ -75,3 +75,7 @@ https://localhost:8443/swagger-ui/index.html
 In controllers ResponseBody is not used to have better control of what is returned.
 
 The exceptions are logged and not propagated as in high load systems this propagation is expensive (performance wise).
+
+## K8s part
+
+K8s yml files are located in k8s folder but it's only a template which should be adjusted to how cluster is set up. Providing only yml's for updater and receiver as usually mysql is used from helm or rds.
